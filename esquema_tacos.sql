@@ -1,11 +1,17 @@
 -- ESQUEMA DE BASE DE DATOS
-DROP SCHEMA IF EXISTS
-    `esquema_tacos`;
-CREATE SCHEMA IF NOT EXISTS
-    `esquema_tacos`
+DROP SCHEMA IF EXISTS `esquema_tacos`;
+CREATE SCHEMA IF NOT EXISTS `esquema_tacos`
     DEFAULT CHARACTER SET utf8;
-
 USE `esquema_tacos`;
+
+-- TABLA REASTAURANTE
+CREATE TABLE IF NOT EXISTS restaurantes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(45) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);
 
 -- TABLA TACOS
 CREATE TABLE IF NOT EXISTS `tacos` (
@@ -17,3 +23,18 @@ CREATE TABLE IF NOT EXISTS `tacos` (
     `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+-- PRUEBAS
+INSERT INTO restaurantes(nombre)
+VALUES
+	("Tacos El Sol"),
+	("Tacos Central"),
+	("Tacos Don Pepe");
+
+INSERT INTO tacos (tortilla, guiso, salsa, restaurante_id)
+VALUES
+	("Maíz", "Carne", "Verde", 1),
+	("Harina", "Pollo", "Roja", 1),
+	("Maíz", "Carnitas", "Verde", 2),
+	("Maíz", "Pastor", "Picante", 2),
+	("Harina", "Barbacoa", "Roja", 3);
