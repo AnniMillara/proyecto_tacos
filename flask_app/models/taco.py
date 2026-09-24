@@ -12,6 +12,7 @@ class Taco:
         self.tortilla = data["tortilla"]
         self.guiso = data["guiso"]
         self.salsa = data["salsa"]
+        self.restaurante_id = data["restaurante_id"]
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
 
@@ -26,13 +27,15 @@ class Taco:
             (
                 tortilla,
                 guiso,
-                salsa
+                salsa,
+                restaurante_id
             )
             VALUES
             (
                 %(tortilla)s,
                 %(guiso)s,
-                %(salsa)s
+                %(salsa)s,
+                %(restaurante_id)s
             );
         """
         return connectToMySQL(
@@ -55,6 +58,7 @@ class Taco:
                 tortilla,
                 guiso,
                 salsa,
+                restaurante_id,
                 created_at,
                 updated_at
             FROM tacos
@@ -84,6 +88,7 @@ class Taco:
                 tortilla,
                 guiso,
                 salsa,
+                restaurante_id,
                 created_at,
                 updated_at
             FROM tacos
@@ -114,7 +119,8 @@ class Taco:
             SET
                 tortilla = %(tortilla)s,
                 guiso = %(guiso)s,
-                salsa = %(salsa)s
+                salsa = %(salsa)s,
+                restaurante_id = %(restaurante_id)s
             WHERE id = %(id)s;
         """
         return connectToMySQL(

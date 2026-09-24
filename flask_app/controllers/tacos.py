@@ -1,7 +1,4 @@
-# ==========================================================
 # CONTROLADOR DE TACOS
-# ==========================================================
-
 from flask_app import app
 from flask import (
     render_template,
@@ -9,16 +6,23 @@ from flask import (
     request,
     url_for
 )
-
 from flask_app.models.taco import Taco
+from flask_app.models.restaurante import Restaurante
 
 # INICIO
 @app.route("/")
 def index():
     """
-    Muestra el formulario principal para crear un taco.
+    Muestra el formulario para crear un taco.
+    También recupera todos los restaurantes para que
+    el usuario pueda seleccionar uno.
     """
-    return render_template("index.html")
+
+    todos_restaurantes = Restaurante.get_all()
+    return render_template(
+        "index.html",
+        todos_restaurantes=todos_restaurantes
+    )
 
 # CREATE
 # Crear taco
@@ -28,10 +32,11 @@ def crear():
     Recibe el formulario y crea un taco.
     """
     datos = {
-        "tortilla": request.form["tortilla"],
-        "guiso": request.form["guiso"],
-        "salsa": request.form["salsa"]
-    }
+        "tortilla": request.form["tortilla"].strip(),
+        "guiso": request.form["guiso"].strip(),
+        "salsa": request.form["salsa"].strip(),
+        "restaurante_id": request.form["restaurante_id"]
+        }
     Taco.save(datos)
     return redirect(url_for("tacos"))
 
@@ -47,6 +52,38 @@ def tacos():
     return render_template(
         "resultados.html",
         todos_tacos=todos_los_tacos
+    )
+
+# READ
+# Restaurantes + Tacos
+@app.route("/restaurantes/<int:id>")
+def restaurante(id):
+    """
+    Muestra un restaurante junto con
+    todos sus tacos relacionados.
+    """
+    datos = {"id": id}
+
+    restaurante = Restaurante.get_restaurante_y_tacos(datos)
+    if restaurante is None:
+        return (
+            "Restaurante no encontrado", 404
+        )
+    return render_template(
+        "restaurante.html",
+        restaurante=restaurante
+    )
+
+#Listado de restaurantes
+@app.route("/restaurantes")
+def restaurantes():
+    """
+    Muestra todos los restaurantes.
+    """
+    todos_restaurantes = Restaurante.get_all()
+    return render_template(
+        "restaurantes.html",
+        restaurantes=todos_restaurantes
     )
 
 # READ
@@ -95,6 +132,7 @@ def actualizar(taco_id):
         "id": taco_id,
         "tortilla": request.form["tortilla"],
         "guiso": request.form["guiso"],
+        "salsa": request.form["salsa"],
         "salsa": request.form["salsa"]
     }
     
